@@ -14,10 +14,11 @@ var jwt         = require('jwt-simple');
 var cors = require('cors');
 var cron = require('node-cron');
 var meli = require('mercadolibre');
-var client_id = "3768661395914657"
-var client_secret = "6IYU8WPeqe37EbJCRyjrOHivvMEk7AHr"
+var client_id = "3768661395914657";
+var client_secret = "6IYU8WPeqe37EbJCRyjrOHivvMEk7AHr";
 var meliObject = new meli.Meli(client_id, client_secret);
-var urlActual = "https://033d4e4f.ngrok.io/api/"
+var urlActual = "https://912fc17a.ngrok.io/api/"
+
 // get our request parameters
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -56,7 +57,7 @@ cron.schedule('*/20 * * * *', function(){
 // create a new user account (POST http://localhost:8080/api/signup)
 apiRoutes.post('/signup', function(req, res) {
   if (!req.body.name || !req.body.password) {
-    res.json({success: false, msg: 'Please pass name and password.'});
+    res.json({success: false, msg: 'Completas nombre y password.'});
   } else {
     var newUser = new User({
       name: req.body.name,
@@ -65,21 +66,23 @@ apiRoutes.post('/signup', function(req, res) {
     // save the user
     newUser.save(function(err) {
       if (err) {
-        return res.json({success: false, msg: 'Username already exists.'});
+        return res.json({success: false, msg: 'Usuario ya existe.'});
       }
-      res.json({success: true, msg: 'Successful created new user.'});
+      res.json({success: true, msg: 'Usuario nuevo creado satifactoriamente'});
     });
   }
 });
  
+ /* OK */
 apiRoutes.post('/authenticate', function(req, res) {
+  console.log(req.body)
   User.findOne({
     name: req.body.name
   }, function(err, user) {
     if (err) throw err;
  
     if (!user) {
-      res.send({success: false, msg: 'Authentication failed. User not found.'});
+      res.send({success: false, msg: 'Usuario no encontrado'});
     } else {
       // check if password matches
       user.comparePassword(req.body.password, function (err, isMatch) {
@@ -172,7 +175,7 @@ apiRoutes.get('/preguntas', (req, res ) => {
           if (!user) {
             return res.status(403).send({success: false, msg: 'Fallo de autenticación.'});
           } else {
-            Pregunta.find( {username: user.name, status: 'UNANSWERED'} , (err, preguntas) => {
+            Pregunta.find( {username: user.name, status: 'UNANSWERED'}).sort({date_created:'desc'}).exec((err, preguntas) => {
               res.json({success: true, data: preguntas})
             })
           }
@@ -399,12 +402,12 @@ function refrescarToken() {
               }
             })
         }
-      ) 
+      )
     })
   })
 }
 
-function dameTokenByUserML(user_id_ml ) {
+function dameTokenByUserML(user_id_ml) {
   UserML.findOne({
     id_ml: user_id_ml
   }, (err, user) => {
@@ -412,8 +415,6 @@ function dameTokenByUserML(user_id_ml ) {
       return user.token
   })
 }
-
-
 
 function autorizarEnML(code, redirect_uri, callback) {
         var self = this;
