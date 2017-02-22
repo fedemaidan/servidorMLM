@@ -17,7 +17,7 @@ var meli = require('mercadolibre');
 var client_id = "3768661395914657";
 var client_secret = "6IYU8WPeqe37EbJCRyjrOHivvMEk7AHr";
 var meliObject = new meli.Meli(client_id, client_secret);
-var urlActual = "https://912fc17a.ngrok.io/api/"
+var urlActual = "https://0ae0005e.ngrok.io/api/"
 
 // get our request parameters
 app.use(bodyParser.urlencoded({ extended: false }));
