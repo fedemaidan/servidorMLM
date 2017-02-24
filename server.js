@@ -386,9 +386,9 @@ function cargarNuevaPregunta(req) {
 
 function refrescarToken() {
   var date = new Date(Date.now());
-  date = date.getTime() + (1000 * 60 * 60 * 1);
+  date = date.getTime();
 
-  UserML.find( { expiration_date: { $gt: date }}, (err, users) => {
+  UserML.find( { expiration_date: { $lt: date }}, (err, users) => {
     users.forEach( (user) => {
       
         var url = 'https://api.mercadolibre.com/oauth/token?grant_type=refresh_token&client_id='+client_id+'&client_secret='+client_secret+'&refresh_token='+user.refresh_token
