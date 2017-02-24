@@ -406,7 +406,7 @@ function refrescarToken(response) {
               }
             })
 
-            res.json({success: true, algo : res.body});
+            response.json({success: true, algo : res.body });
         }
       )
     })
