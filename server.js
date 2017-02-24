@@ -397,10 +397,10 @@ function refrescarToken() {
             var expiration_date = new Date(Date.now());
             expiration_date = expiration_date.getTime() + (res.body.expires_in * 1000);
             
-            console.log(res.body)
-            console.log(user.access_token)
+            console.log(user)
+            
+            
             user.access_token = res.body.access_token
-            console.log(user.access_token)
             user.refresh_token = res.body.refresh_token
             user.expiration_date = new Date(expiration_date)
 
