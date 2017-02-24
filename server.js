@@ -51,7 +51,7 @@ apiRoutes.use(cors())
 
 
 cron.schedule('* * * * *', function(){
-  refrescarToken()
+  // refrescarToken()
 });
 
 // create a new user account (POST http://localhost:8080/api/signup)
@@ -142,6 +142,11 @@ apiRoutes.get('/iniciarConML', (req, res ) => {
     var name = req.query.user;
     var url = meliObject.getAuthURL(urlActual+'usuarioML?user='+name)
     res.json({success: true, url: url});
+})
+
+apiRoutes.get('/refresh_token', (req, res ) => {
+    var algo = refrescarToken()
+    res.json({success: true, algo: algo});
 })
 
 apiRoutes.get('/usuarioML', function(req, res) {
@@ -388,8 +393,6 @@ function refrescarToken() {
       
         var url = 'https://api.mercadolibre.com/oauth/token?grant_type=refresh_token&client_id='+client_id+'&client_secret='+client_secret+'&refresh_token='+user.refresh_token
         needle.post(url, {}, {}, (req, res) => {
-            console.log(res)
-            console.log(req)
             var expiration_date = new Date(Date.now());
             expiration_date = expiration_date.getTime() + (res.body.expires_in * 1000);
 
@@ -402,6 +405,8 @@ function refrescarToken() {
                 console.log(err)
               }
             })
+
+            return { res: res, req: req }
         }
       )
     })
