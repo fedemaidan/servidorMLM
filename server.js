@@ -145,7 +145,7 @@ apiRoutes.get('/iniciarConML', (req, res ) => {
 })
 
 apiRoutes.get('/refresh_token', (req, res ) => {
-    var algo = refrescarToken()
+    var algo = refrescarToken(res)
     res.json({success: true, algo: algo});
 })
 
@@ -384,7 +384,7 @@ function cargarNuevaPregunta(req) {
   })
 }
 
-function refrescarToken() {
+function refrescarToken(response) {
   var date = new Date(Date.now());
   date = date.getTime() + (1000 * 60 * 60 * 1);
 
@@ -406,7 +406,7 @@ function refrescarToken() {
               }
             })
 
-            return { res: res, req: req }
+            res.json({success: true, algo : res.body});
         }
       )
     })
