@@ -146,7 +146,7 @@ apiRoutes.get('/iniciarConML', (req, res ) => {
 
 apiRoutes.get('/refresh_token', (req, res ) => {
     var algo = refrescarToken()
-    res.json({success: true, url: url});
+    res.json({success: true});
 })
 
 apiRoutes.get('/usuarioML', function(req, res) {
@@ -393,10 +393,11 @@ function refrescarToken() {
       
         var url = 'https://api.mercadolibre.com/oauth/token?grant_type=refresh_token&client_id='+client_id+'&client_secret='+client_secret+'&refresh_token='+user.refresh_token
         needle.post(url, {}, {}, (req, res) => {
-            console.log(req);
-            console.log(res);
+            
             var expiration_date = new Date(Date.now());
             expiration_date = expiration_date.getTime() + (res.body.expires_in * 1000);
+            
+            console.log(res.body)
 
             user.access_token = res.body.access_token
             user.refresh_token = res.body.refresh_token
