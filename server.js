@@ -180,7 +180,7 @@ apiRoutes.get('/preguntas', (req, res ) => {
           if (!user) {
             return res.status(403).send({success: false, msg: 'Fallo de autenticación.'});
           } else {
-            Pregunta.find( {username: user.name, status: 'UNANSWERED'}).sort({date_created:'desc'}).exec((err, preguntas) => {
+            Pregunta.find( {username: user.name, status: 'UNANSWERED'}).sort({date_created:'asc'}).exec((err, preguntas) => {
               res.json({success: true, data: preguntas})
             })
           }
