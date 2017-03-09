@@ -364,7 +364,7 @@ function cargarNuevaPregunta(req) {
     id_ml: req.body.user_id
   }, (err, user) => {
       if (user) {
-        meliObject.get( req.body.resource, { token: user.token}, (request, pregunta ) => {
+        meliObject.get( req.body.resource, { access_token: user.token}, (request, pregunta ) => {
           if (pregunta.status == 'ANSWERED'){
               Pregunta.update( { question_id: pregunta.id}, 
                                 { status: pregunta.status,
