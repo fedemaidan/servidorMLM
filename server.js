@@ -51,7 +51,7 @@ apiRoutes.use(cors())
 
 
 cron.schedule('* * * * *', function(){
-  // refrescarToken()
+  refrescarToken()
 });
 
 // create a new user account (POST http://localhost:8080/api/signup)
