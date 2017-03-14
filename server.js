@@ -36,7 +36,7 @@ io.on('connection', function(socket){
   console.log('a user connected');
 });
 
-http.listen(3000, function(){
+http.listen(8080, function(){
   console.log('listening on *:3000');
 });
 
