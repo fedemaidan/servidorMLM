@@ -50,7 +50,6 @@ io.on('connection', function(socket){
           console.log("Se guardo el socket")  
         }
       });
-    }
   });
 });
 
