@@ -365,6 +365,7 @@ function guardarPreguntaEnLaBase(req, respuesta, pregunta, username) {
         if (err) {
           console.log(err)
         }
+        avisarNuevaPregunta(req.body);
       })
     }
     else {
