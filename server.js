@@ -9,6 +9,7 @@ var passport	= require('passport');
 var needle = require('needle');
 var config      = require('./config/database'); // get db config file
 var User        = require('./app/models/user'); // get the mongoose model
+var Socket        = require('./app/models/socket'); // get the mongoose model
 var UserML        = require('./app/models/userML'); // get the mongoose model
 var Pregunta        = require('./app/models/pregunta');
 var port        = process.env.PORT || 8080;
@@ -33,8 +34,23 @@ app.use(passport.initialize());
 
 /*SOCKET */
 io.on('connection', function(socket){
-  socket.on('hola', function(msg){
-    console.log('message: ' + msg);
+  socket.on('hola', function(usuario){
+     console.log('Se conecto ' + usuario);
+     var socketRegistro = new User({
+        usuario: usuario,
+        socket: socket
+      });
+      
+      socketRegistro.save(function(err) {
+        if (err) {
+          console.log("Error cargado socket")
+          console.log(err)
+        }
+        else {
+          console.log("Se guardo el socket")  
+        }
+      });
+    }
   });
 });
 
@@ -228,9 +244,11 @@ apiRoutes.get('/cuentas', (req, res ) => {
 })
 
 apiRoutes.post('/escucho', function(req, res) {
-  console.log(req.body)
+  
   if (req.body.topic == "questions") {
     cargarNuevaPregunta(req)
+
+    avisarNuevaPregunta(req.body);
   }
   res.json({success: true, msg: 'Escuche correctamente'})
 });
@@ -450,3 +468,19 @@ function autorizarEnML(code, redirect_uri, callback) {
             callback(err, body);
         });
     };
+
+function avisarNuevaPregunta(mensaje) {
+  var user_id = mensaje.user_id
+  var resource = mensaje.resource
+
+  UserML.findOne( {id_ml: user_id} , (err, userML) => {
+    /* buscar socket */
+
+    Socket.findOne( { usuario: userML.username }, (error, socket) => {
+        socket.emit("nuevaPregunta", resource)
+    })
+  })
+  
+
+  /* emito mensaje */
+}
