@@ -33,10 +33,9 @@ app.use(passport.initialize());
 
 /*SOCKET */
 io.on('connection', function(socket){
-  console.log(socket);
-  console.log("socketttttttt");
-  console.log(socket.client);
-  console.log(socket.client.conn);
+  socket.on('hola', function(msg){
+    console.log('message: ' + msg);
+  });
 });
 
 http.listen(3000, function(){
