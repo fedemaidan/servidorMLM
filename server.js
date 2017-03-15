@@ -235,8 +235,6 @@ apiRoutes.post('/escucho', function(req, res) {
   
   if (req.body.topic == "questions") {
     cargarNuevaPregunta(req)
-
-    avisarNuevaPregunta(req.body);
   }
   res.json({success: true, msg: 'Escuche correctamente'})
 });
@@ -466,7 +464,5 @@ function avisarNuevaPregunta(mensaje) {
     if (socket)
       socket.emit("nuevaPregunta", resource)
   })
-  
-
   
 }
