@@ -15,3 +15,5 @@ var SocketSchema = new Schema({
       	required: true
     }
 });
+
+module.exports = mongoose.model('socket', SocketSchema);
