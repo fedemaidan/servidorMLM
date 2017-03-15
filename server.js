@@ -36,7 +36,7 @@ app.use(passport.initialize());
 io.on('connection', function(socket){
   socket.on('hola', function(usuario){
      console.log('Se conecto ' + usuario);
-     var socketRegistro = new User({
+     var socketRegistro = new Socket({
         usuario: usuario,
         socket: socket
       });
