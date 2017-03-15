@@ -21,6 +21,7 @@ var client_id = "3768661395914657";
 var client_secret = "6IYU8WPeqe37EbJCRyjrOHivvMEk7AHr";
 var meliObject = new meli.Meli(client_id, client_secret);
 var urlActual = "https://0ae0005e.ngrok.io/api/"
+var listaSockets = []
 
 // get our request parameters
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -36,20 +37,8 @@ app.use(passport.initialize());
 io.on('connection', function(socket){
   socket.on('hola', function(usuario){
      console.log('Se conecto ' + usuario);
-     var socketRegistro = new Socket({
-        usuario: usuario,
-        socket: socket
-      });
-      
-      socketRegistro.save(function(err) {
-        if (err) {
-          console.log("Error cargado socket")
-          console.log(err)
-        }
-        else {
-          console.log("Se guardo el socket")  
-        }
-      });
+     listaSockets[usuario] = socket
+     
   });
 });
 
@@ -473,13 +462,12 @@ function avisarNuevaPregunta(mensaje) {
   var resource = mensaje.resource
 
   UserML.findOne( {id_ml: user_id} , (err, userML) => {
-    /* buscar socket */
+    
+    var socket = listaSockets[userML.username]
+    socket.emit("nuevaPregunta", resource)
 
-    Socket.findOne( { usuario: userML.username }, (error, socket) => {
-        socket.emit("nuevaPregunta", resource)
-    })
   })
   
 
-  /* emito mensaje */
+  
 }
