@@ -462,10 +462,9 @@ function avisarNuevaPregunta(mensaje) {
   var resource = mensaje.resource
 
   UserML.findOne( {id_ml: user_id} , (err, userML) => {
-    
     var socket = listaSockets[userML.username]
-    socket.emit("nuevaPregunta", resource)
-
+    if (socket)
+      socket.emit("nuevaPregunta", resource)
   })
   
 
