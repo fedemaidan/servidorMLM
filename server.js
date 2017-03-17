@@ -439,7 +439,7 @@ function refrescarToken() {
 
               var socket = listaSockets[user.username]
               if (socket)
-                socket.emit("nuevaCuenta", resource)
+                socket.emit("nuevaCuenta", "Actualice cuenta")
             })
 
             return { res: res, req: req }
