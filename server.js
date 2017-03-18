@@ -126,10 +126,15 @@ apiRoutes.post('/responder', function(req, res) {
       res.send({success: false, msg: 'No se encuentra usuario'});
     } else {
       meliObject.post('answers?access_token='+user.token, { question_id: req.body.question_id, text: req.body.text }, {} , 
-        (req2, res2) => {
-          console.log(res2)
-          console.log(req2)
-          res.json({success: true, msg: 'Respondida correctamente'});
+        (req2, pregunta) => {
+          if (pregunta.status == "ANSWERED") {
+            Pregunta.update( { question_id: pregunta.id}, 
+                                { status: pregunta.status,
+                                  answer: pregunta.answer} , {} , (pregunta) => {
+                                    res.json({success: true, msg: 'Respondida correctamente'});
+                                });
+          }
+            
         })
     }
   });
@@ -244,6 +249,12 @@ apiRoutes.post('/escucho', function(req, res) {
   
   if (req.body.topic == "questions") {
     cargarNuevaPregunta(req)
+  }
+  else {
+    console.log("no entiendo")
+    console.log(req.body)
+    console.log(res)
+
   }
   res.json({success: true, msg: 'Escuche correctamente'})
 });
