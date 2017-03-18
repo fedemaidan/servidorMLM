@@ -246,7 +246,7 @@ apiRoutes.get('/cuentas', (req, res ) => {
 })
 
 apiRoutes.post('/escucho', function(req, res) {
-  
+  console.log(req.body)
   if (req.body.topic == "questions") {
     cargarNuevaPregunta(req)
   }
