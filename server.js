@@ -92,7 +92,7 @@ apiRoutes.post('/signup', function(req, res) {
  
  /* OK */
 apiRoutes.post('/authenticate', function(req, res) {
-  console.log(req.body)
+  
   User.findOne({
     name: req.body.name
   }, function(err, user) {
@@ -401,7 +401,7 @@ function guardarPreguntaEnLaBase(req, respuesta, pregunta, username) {
 
 }
 function cargarNuevaPregunta(req) {
-  console.log(req.body.user_id)
+  
   UserML.findOne({
     id_ml: req.body.user_id
   }, (err, user) => {
@@ -413,8 +413,6 @@ function cargarNuevaPregunta(req) {
                                   answer: pregunta.answer} , {} , (pregunta) => {
                                     console.log("Registro respuesta en la base")
                                 });
-              console.log("usuario al que respondo")
-              console.log(user)
               avisarPreguntaRespondida(user.username)
           }
           else
@@ -502,10 +500,10 @@ function avisarNuevaPregunta(mensaje) {
 }
 
 function avisarPreguntaRespondida(username) {
-  console.log("quiero avisar que me respondieron")
-  console.log(username)
+  
   var socket = listaSockets[username]
-  // socket.emit("actualizarPreguntas", "Pregunta respondida por medio externo")
+  if (socket)
+    socket.emit("actualizarPreguntas", "Pregunta respondida por medio externo")
 }
 
 
