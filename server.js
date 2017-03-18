@@ -505,7 +505,7 @@ function avisarPreguntaRespondida(username) {
   console.log("quiero avisar que me respondieron")
   console.log(username)
   var socket = listaSockets[username]
-  socket.emit("actualizarPreguntas", "Pregunta respondida por medio externo")
+  // socket.emit("actualizarPreguntas", "Pregunta respondida por medio externo")
 }
 
 
