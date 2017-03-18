@@ -251,7 +251,7 @@ apiRoutes.post('/escucho', function(req, res) {
     cargarNuevaPregunta(req)
   }
   else {
-    console.log("no entiendo")
+    console.log("No entiendo lo que escucho de ML")
     console.log(req.body)
     console.log(res)
 
@@ -413,6 +413,7 @@ function cargarNuevaPregunta(req) {
                                   answer: pregunta.answer} , {} , (pregunta) => {
                                     console.log("Registro respuesta en la base")
                                 });
+              avisarPreguntaRespondida(user.username)
           }
           else
             guardarPreguntaEnLaBase(req, pregunta, pregunta, user.username)
@@ -490,8 +491,15 @@ function avisarNuevaPregunta(mensaje) {
 
   UserML.findOne( {id_ml: user_id} , (err, userML) => {
     var socket = listaSockets[userML.username]
-    if (socket)
-      socket.emit("nuevaPregunta", resource)
+    if (socket) {
+      socket.emit("actualizarPreguntas", resource)
+    }
+      
   })
   
+}
+
+function avisarPreguntaRespondida(username) {
+  var socket = listaSockets[username]
+  socket.emit("actualizarPreguntas", "Pregunta respondida por medio externo")
 }
