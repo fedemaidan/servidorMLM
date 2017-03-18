@@ -500,6 +500,7 @@ function avisarNuevaPregunta(mensaje) {
 }
 
 function avisarPreguntaRespondida(username) {
+  console.log(username)
   var socket = listaSockets[username]
   socket.emit("actualizarPreguntas", "Pregunta respondida por medio externo")
 }
