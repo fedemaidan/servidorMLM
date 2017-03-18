@@ -55,7 +55,7 @@ app.get('/', function(req, res) {
 app.get('/notificacion', function(req, res) {
   var socket = listaSockets["notifica"]
     if (socket) {
-      socket.emit("notificacion", resource)
+      socket.emit("notificacion", "mensaje")
     }
   res.send('Hello! The API is at http://localhost:' + port + '/api');
 });
