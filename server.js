@@ -413,6 +413,7 @@ function cargarNuevaPregunta(req) {
                                   answer: pregunta.answer} , {} , (pregunta) => {
                                     console.log("Registro respuesta en la base")
                                 });
+              console.log(user)
               avisarPreguntaRespondida(user.username)
           }
           else
@@ -500,7 +501,6 @@ function avisarNuevaPregunta(mensaje) {
 }
 
 function avisarPreguntaRespondida(username) {
-  console.log(username)
   var socket = listaSockets[username]
   socket.emit("actualizarPreguntas", "Pregunta respondida por medio externo")
 }
