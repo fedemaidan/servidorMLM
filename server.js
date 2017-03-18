@@ -51,6 +51,14 @@ http.listen(3000, function(){
 app.get('/', function(req, res) {
   res.send('Hello! The API is at http://localhost:' + port + '/api');
 });
+
+app.get('/notificacion', function(req, res) {
+  var socket = listaSockets["notifica"]
+    if (socket) {
+      socket.emit("notificacion", resource)
+    }
+  res.send('Hello! The API is at http://localhost:' + port + '/api');
+});
  
 // Start the server
 app.listen(port);
@@ -500,11 +508,7 @@ function avisarNuevaPregunta(mensaje) {
 }
 
 function avisarPreguntaRespondida(username) {
-  
   var socket = listaSockets[username]
   if (socket)
     socket.emit("actualizarPreguntas", "Pregunta respondida por medio externo")
 }
-
-
-
