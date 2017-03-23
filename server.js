@@ -501,6 +501,7 @@ function avisarNuevaPregunta(mensaje) {
     var socket = listaSockets[userML.username]
     if (socket) {
       socket.emit("actualizarPreguntas", resource)
+      socket.emit("notificacion", "mensaje")
     }
       
   })
