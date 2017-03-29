@@ -324,13 +324,14 @@ function errorEnPeticion(requerimiento, response) {
 function removerUsuarioML(nickname, username, id_ml) {
   
   var socket = listaSockets[username]
+
   UserML.remove({ nickname: nickname, 
                   username: username, 
                   id_ml: id_ml
                 }, function(err) {
             if (!err) {
                     if (socket)
-                      socket.emit("nuevaCuenta", "Actualice cuenta")
+                      socket.emit("nuevaCuenta", "Borre cuenta")
             }
             else {
                     console.log("no borreee")
@@ -343,7 +344,7 @@ function removerUsuarioML(nickname, username, id_ml) {
   }, function(err) {
         if (!err) {
               if (socket)
-                socket.emit("nuevaCuenta", "Actualice cuenta")
+                socket.emit("actualizarPreguntas", "Borre cuenta")
             }
             else {
                     console.log("no borreee")
