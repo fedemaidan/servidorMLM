@@ -206,6 +206,23 @@ apiRoutes.get('/usuarioML', function(req, res) {
   }
 });
 
+apiRoutes.get('/removerUsuarioML', function(req, res) {
+   var token = getToken(req.headers);
+    if (token) {
+      var decoded = jwt.decode(token, config.secret);
+      User.findOne({
+        name: decoded.name
+      }, function(err, user) {
+          var nickname = id_ml: req.body.nickname
+          var id_ml = req.body.user_id_ml
+          var username = user.name
+          removerUsuarioML(nickname, username, id_ml)
+      });
+    }
+    else {
+      res.json({success: false, msg: 'Cargar token'})
+    }
+});
 
 apiRoutes.get('/preguntas', (req, res ) => {
     var token = getToken(req.headers);
@@ -302,6 +319,13 @@ function errorEnPeticion(requerimiento, response) {
 
 }
 
+
+function removerUsuarioML(nickname, username, id_ml) {
+  UserML.remove({ nickname: nickname, 
+                  username: username, 
+                  id_ml: id_ml
+                });
+}
 function cargarDatosDeUsuario(name, reso) {
   meliObject.get('users/me?access_token='+reso.access_token, (req2, datos) => {
         if (!(errorEnPeticion(req2, datos))) {
