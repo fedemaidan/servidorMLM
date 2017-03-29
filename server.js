@@ -322,15 +322,15 @@ function errorEnPeticion(requerimiento, response) {
 
 
 function removerUsuarioML(nickname, username, id_ml) {
-  console.log(nickname)
-  console.log(username)
-  console.log(id_ml)
+  
+  var socket = listaSockets[username]
   UserML.remove({ nickname: nickname, 
                   username: username, 
                   id_ml: id_ml
                 }, function(err) {
             if (!err) {
-                    console.log("borreee")
+                    if (socket)
+                      socket.emit("nuevaCuenta", "Actualice cuenta")
             }
             else {
                     console.log("no borreee")
@@ -342,7 +342,8 @@ function removerUsuarioML(nickname, username, id_ml) {
     seller_id: id_ml
   }, function(err) {
         if (!err) {
-                    console.log("borreee")
+              if (socket)
+                socket.emit("nuevaCuenta", "Actualice cuenta")
             }
             else {
                     console.log("no borreee")
