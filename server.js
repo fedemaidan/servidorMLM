@@ -325,6 +325,9 @@ function removerUsuarioML(nickname, username, id_ml) {
                   username: username, 
                   id_ml: id_ml
                 });
+  Pregunta.remove({
+    seller_id: id_ml
+  })
 }
 function cargarDatosDeUsuario(name, reso) {
   meliObject.get('users/me?access_token='+reso.access_token, (req2, datos) => {
