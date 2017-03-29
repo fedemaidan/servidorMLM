@@ -208,6 +208,7 @@ apiRoutes.get('/usuarioML', function(req, res) {
 
 apiRoutes.post('/removerUsuarioML', function(req, res) {
    var token = getToken(req.headers);
+   console.log(token)
     if (token) {
       var decoded = jwt.decode(token, config.secret);
       User.findOne({
@@ -321,6 +322,9 @@ function errorEnPeticion(requerimiento, response) {
 
 
 function removerUsuarioML(nickname, username, id_ml) {
+  console.log(nickname)
+  console.log(username)
+  console.log(id_ml)
   UserML.remove({ nickname: nickname, 
                   username: username, 
                   id_ml: id_ml
