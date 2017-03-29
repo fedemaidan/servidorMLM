@@ -446,7 +446,8 @@ function guardarPreguntaEnLaBase(req, respuesta, pregunta, username) {
         if (err) {
           console.log(err)
         }
-        avisarNuevaPregunta(req.body);
+        if (req)
+          avisarNuevaPregunta(req.body);
       })
     }
     else {
