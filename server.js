@@ -208,7 +208,7 @@ apiRoutes.get('/usuarioML', function(req, res) {
 
 apiRoutes.post('/removerUsuarioML', function(req, res) {
    var token = getToken(req.body.headers);
-   
+  console.log(req.body);
    console.log(token)
     if (token) {
       var decoded = jwt.decode(token, config.secret);
