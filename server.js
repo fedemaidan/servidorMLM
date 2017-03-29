@@ -213,7 +213,7 @@ apiRoutes.get('/removerUsuarioML', function(req, res) {
       User.findOne({
         name: decoded.name
       }, function(err, user) {
-          var nickname = id_ml: req.body.nickname
+          var nickname = req.body.nickname
           var id_ml = req.body.user_id_ml
           var username = user.name
           removerUsuarioML(nickname, username, id_ml)
