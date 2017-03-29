@@ -288,9 +288,7 @@ apiRoutes.post('/escucho', function(req, res) {
 getToken = function (headers) {
   if (headers && headers.authorization) {
     var parted = headers.authorization.split(' ');
-    console.log("entre1")
     if (parted.length === 2) {
-      console.log("entre")
       return parted[1];
     } else {
       return null;
@@ -330,10 +328,27 @@ function removerUsuarioML(nickname, username, id_ml) {
   UserML.remove({ nickname: nickname, 
                   username: username, 
                   id_ml: id_ml
-                });
+                }, function(err) {
+            if (!err) {
+                    console.log("borreee")
+            }
+            else {
+                    console.log("no borreee")
+                    console.log(err)
+            }
+        }
+    );
   Pregunta.remove({
     seller_id: id_ml
-  })
+  }, function(err) {
+        if (!err) {
+                    console.log("borreee")
+            }
+            else {
+                    console.log("no borreee")
+                    console.log(err)
+            }
+    })
 }
 function cargarDatosDeUsuario(name, reso) {
   meliObject.get('users/me?access_token='+reso.access_token, (req2, datos) => {
