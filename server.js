@@ -208,7 +208,7 @@ apiRoutes.get('/usuarioML', function(req, res) {
 
 apiRoutes.post('/removerUsuarioML', function(req, res) {
    var token = getToken(req.body.headers);
-  console.log(req.body);
+  console.log(req.body.headers);
    console.log(token)
     if (token) {
       var decoded = jwt.decode(token, config.secret);
@@ -288,8 +288,11 @@ apiRoutes.post('/escucho', function(req, res) {
  
 getToken = function (headers) {
   if (headers && headers.authorization) {
+    console.log(headers)
     var parted = headers.authorization.split(' ');
+    console.log("entre1")
     if (parted.length === 2) {
+      console.log("entre")
       return parted[1];
     } else {
       return null;
