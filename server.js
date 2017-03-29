@@ -206,7 +206,7 @@ apiRoutes.get('/usuarioML', function(req, res) {
   }
 });
 
-apiRoutes.get('/removerUsuarioML', function(req, res) {
+apiRoutes.post('/removerUsuarioML', function(req, res) {
    var token = getToken(req.headers);
     if (token) {
       var decoded = jwt.decode(token, config.secret);
@@ -220,7 +220,7 @@ apiRoutes.get('/removerUsuarioML', function(req, res) {
       });
     }
     else {
-      res.json({success: false, msg: 'Cargar token'})
+      res.json({success: false, msg: 'Usuario removido'})
     }
 });
 
