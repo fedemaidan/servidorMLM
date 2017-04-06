@@ -446,7 +446,7 @@ function guardarPreguntaEnLaBase(req, respuesta, pregunta, username, token) {
         username: username
       })
 
-      cargarPreguntasPrevias(req, respuesta, pregunta, username, token)
+      cargarPreguntasPrevias(req, respuesta, preg, username, token)
 
     }
     else {
