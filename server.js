@@ -301,7 +301,7 @@ getToken = function (headers) {
   }
 };
 
-app.use('/', apiRoutes);
+app.use('', apiRoutes);
 
 
 function errorEnPeticion(requerimiento, response) {
