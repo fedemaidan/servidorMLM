@@ -84,17 +84,18 @@ cron.schedule('* * * * *', function(){
 
 // create a new user account (POST http://localhost:8080/api/signup)
 apiRoutes.post('/signup', function(req, res) {
-  if (!req.body.name || !req.body.password) {
-    res.json({success: false, msg: 'Completas nombre y password.'});
+  if (!req.body.name || !req.body.password || !req.body.mail) {
+    res.json({success: false, msg: 'Completar nombre, password y mail.'});
   } else {
     var newUser = new User({
       name: req.body.name,
+      mail: req.body.mail,
       password: req.body.password
     });
     // save the user
     newUser.save(function(err) {
       if (err) {
-        return res.json({success: false, msg: 'Usuario ya existe.'});
+        return res.json({success: false, msg: err.message});
       }
       res.json({success: true, msg: 'Usuario nuevo creado satifactoriamente'});
     });
