@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
- 
+const Email = require('mongoose-type-mail');
+
 // Thanks to http://blog.matoski.com/articles/jwt-express-node-mongoose/
  
 // set up a mongoose model
@@ -10,6 +11,11 @@ var UserSchema = new Schema({
         type: String,
         unique: true,
         required: true
+    },
+  mail: { 
+    type: Email,
+    required: [true, 'Mail es requerido'],
+    unique: [true, 'El mail ya existe'],
     },
   password: {
         type: String,
@@ -45,5 +51,11 @@ UserSchema.methods.comparePassword = function (passw, cb) {
         cb(null, isMatch);
     });
 };
- 
+
+UserSchema.path('email').validate(function (email) {
+   var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+   return emailRegex.test(email.text); // Assuming email has a text attribute
+}, 'The e-mail field cannot be empty.')
+
 module.exports = mongoose.model('User', UserSchema);
+

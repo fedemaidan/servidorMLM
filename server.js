@@ -23,7 +23,7 @@ var client      = require('./config/mlClient'); // get db config file
 var client_id = client.id;
 var client_secret = client.secret;
 var meliObject = new meli.Meli(client_id, client_secret);
-var urlActual = "https://f0a97c00.ngrok.io/"
+var urlActual = "https://abed77da.ngrok.io/api/"
 var listaSockets = []
 
 // get our request parameters
@@ -301,7 +301,8 @@ getToken = function (headers) {
   }
 };
 
-app.use('', apiRoutes);
+// connect the api routes under /api/*
+app.use('/api', apiRoutes);
 
 
 function errorEnPeticion(requerimiento, response) {
@@ -446,8 +447,15 @@ function guardarPreguntaEnLaBase(req, respuesta, pregunta, username, token) {
         username: username
       })
 
-      cargarPreguntasPrevias(req, respuesta, preg, username, token)
+      cargarPreguntasPrevias(req, respuesta, pregunta, username, token)
 
+      preg.save(function(err) {
+        if (err) {
+          console.log(err)
+        }
+        if (req)
+          avisarNuevaPregunta(req.body);
+      })
     }
     else {
       console.log("ERROR: Falló en la solicitud de item de la pregunta.")
@@ -468,7 +476,7 @@ function cargarPreguntasPrevias(req, respuesta, pregunta, username, token) {
                                     pregunta.preguntas_previas = res.questions;
                                     pregunta.cantidad_preguntas_previas = pregunta.preguntas_previas.length
 
-                                    pregunta.save(function(err) {
+                                    preg.save(function(err) {
                                         if (err) {
                                           console.log(err)
                                         }
@@ -476,7 +484,9 @@ function cargarPreguntasPrevias(req, respuesta, pregunta, username, token) {
                                           avisarNuevaPregunta(req.body);
                                       })
                                   }
-                  )
+
+  }
+
 }
 
 function cargarNuevaPregunta(req) {
