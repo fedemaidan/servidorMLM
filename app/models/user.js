@@ -15,7 +15,7 @@ var UserSchema = new Schema({
   mail: { 
     type: Email,
     required: [true, 'Mail es requerido'],
-    unique: [true, 'El mail ya existe'],
+    unique: [true, 'El mail ya existe']
     },
   password: {
         type: String,
