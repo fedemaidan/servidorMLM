@@ -484,9 +484,7 @@ function cargarPreguntasPrevias(req, respuesta, pregunta, username, token) {
                                           avisarNuevaPregunta(req.body);
                                       })
                                   }
-
-  }
-
+                  )
 }
 
 function cargarNuevaPregunta(req) {
