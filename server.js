@@ -17,8 +17,11 @@ var jwt         = require('jwt-simple');
 var cors = require('cors');
 var cron = require('node-cron');
 var meli = require('mercadolibre');
-var client_id = "3768661395914657";
-var client_secret = "6IYU8WPeqe37EbJCRyjrOHivvMEk7AHr";
+
+/* var configuración */
+var client      = require('./config/mlClient'); // get db config file
+var client_id = client.id;
+var client_secret = client.secret;
 var meliObject = new meli.Meli(client_id, client_secret);
 var urlActual = "https://abed77da.ngrok.io/api/"
 var listaSockets = []
@@ -404,7 +407,7 @@ function cargarPreguntas(username, token, offset) {
     if (!(errorEnPeticion(req, respuesta))) {
         total = respuesta.total
         respuesta.questions.forEach( (pregunta) => {
-            guardarPreguntaEnLaBase(req, respuesta, pregunta, username)
+            guardarPreguntaEnLaBase(req, respuesta, pregunta, username, token)
             preguntasCargadas++
         })
 
@@ -422,10 +425,11 @@ function cargarPreguntas(username, token, offset) {
           console.log("TOTAL:" + total)
           cargarPreguntas(username, token, offset)
         }
-    })
+  })
 }
 
-function guardarPreguntaEnLaBase(req, respuesta, pregunta, username) {
+function guardarPreguntaEnLaBase(req, respuesta, pregunta, username, token) {
+
   meliObject.get('items/'+pregunta.item_id, {}, (req2, item) => {
       if (!(errorEnPeticion(req, respuesta))) {
         var preg = new Pregunta({
@@ -443,6 +447,8 @@ function guardarPreguntaEnLaBase(req, respuesta, pregunta, username) {
         username: username
       })
 
+      cargarPreguntasPrevias(req, respuesta, pregunta, username, token)
+
       preg.save(function(err) {
         if (err) {
           console.log(err)
@@ -453,12 +459,36 @@ function guardarPreguntaEnLaBase(req, respuesta, pregunta, username) {
     }
     else {
       console.log("ERROR: Falló en la solicitud de item de la pregunta.")
-      guardarPreguntaEnLaBase(req, respuesta, pregunta, username)
+      guardarPreguntaEnLaBase(req, respuesta, pregunta, username, token)
     }
   })
+}
 
+function cargarPreguntasPrevias(req, respuesta, pregunta, username, token) {
+  meliObject.get('questions/search',
+                                  {  
+                                    item: pregunta.item_id, 
+                                    from: pregunta.from.id,
+                                    access_token: token,
+                                    sort: 'date_created_asc'
+                                  }, 
+                                  (req2, res) => {
+                                    pregunta.preguntas_previas = res.questions;
+                                    pregunta.cantidad_preguntas_previas = pregunta.preguntas_previas.length
+
+                                    preg.save(function(err) {
+                                        if (err) {
+                                          console.log(err)
+                                        }
+                                        if (req)
+                                          avisarNuevaPregunta(req.body);
+                                      })
+                                  }
+
+  }
 
 }
+
 function cargarNuevaPregunta(req) {
   
   UserML.findOne({
@@ -475,7 +505,7 @@ function cargarNuevaPregunta(req) {
               avisarPreguntaRespondida(user.username)
           }
           else
-            guardarPreguntaEnLaBase(req, pregunta, pregunta, user.username)
+            guardarPreguntaEnLaBase(req, pregunta, pregunta, user.username, user.token)
         })
       }
       else {

@@ -42,11 +42,17 @@ var PreguntaSchema = new Schema({
   		type: Schema.Types.Mixed
   },
   seller_id: {
-        type: String,
-        required: true
-    },
+      type: String,
+      required: true
+  },
   from: {
   		type: Schema.Types.Mixed,
+  },
+  preguntas_previas: {
+      type: Schema.Types.Mixed,
+  },
+  cantidad_preguntas_previas: {
+      type: String
   }
 });
 
