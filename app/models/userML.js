@@ -49,6 +49,9 @@ var UserMLSchema = new Schema({
   reputation: {
       type: Schema.Types.Mixed,
   },
+  transactions: {
+      type: Schema.Types.Mixed,
+  },
 });
 
 module.exports = mongoose.model('UserML', UserMLSchema);
