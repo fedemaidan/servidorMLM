@@ -23,7 +23,7 @@ var client      = require('./config/mlClient'); // get db config file
 var client_id = client.id;
 var client_secret = client.secret;
 var meliObject = new meli.Meli(client_id, client_secret);
-var urlActual = "https://f0a97c00.ngrok.io/api/"
+var urlActual = "https://f0a97c00.ngrok.io/"
 var listaSockets = []
 
 // get our request parameters
@@ -448,13 +448,6 @@ function guardarPreguntaEnLaBase(req, respuesta, pregunta, username, token) {
 
       cargarPreguntasPrevias(req, respuesta, pregunta, username, token)
 
-      preg.save(function(err) {
-        if (err) {
-          console.log(err)
-        }
-        if (req)
-          avisarNuevaPregunta(req.body);
-      })
     }
     else {
       console.log("ERROR: Falló en la solicitud de item de la pregunta.")
@@ -475,7 +468,7 @@ function cargarPreguntasPrevias(req, respuesta, pregunta, username, token) {
                                     pregunta.preguntas_previas = res.questions;
                                     pregunta.cantidad_preguntas_previas = pregunta.preguntas_previas.length
 
-                                    preg.save(function(err) {
+                                    pregunta.save(function(err) {
                                         if (err) {
                                           console.log(err)
                                         }
