@@ -23,7 +23,7 @@ var client      = require('./config/mlClient'); // get db config file
 var client_id = client.id;
 var client_secret = client.secret;
 var meliObject = new meli.Meli(client_id, client_secret);
-var urlActual = "https://f0a97c00.ngrok.io"
+var urlActual = "https://f0a97c00.ngrok.io/"
 var listaSockets = []
 
 // get our request parameters
