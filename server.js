@@ -265,7 +265,9 @@ apiRoutes.get('/cuentas', (req, res ) => {
           return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
         } else {
           UserML.find( {username: user.name} , (err, usersML) => {
-            console.log(usersML)
+            for (var i = usersML.length - 1; i >= 0; i--) {
+              console.log(usersML[i].transactions)
+            };
             res.json({success: true, data: usersML})
           })
         }
