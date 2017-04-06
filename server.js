@@ -23,7 +23,7 @@ var client      = require('./config/mlClient'); // get db config file
 var client_id = client.id;
 var client_secret = client.secret;
 var meliObject = new meli.Meli(client_id, client_secret);
-var urlActual = "https://abed77da.ngrok.io/api/"
+var urlActual = "https://f0a97c00.ngrok.io/api/"
 var listaSockets = []
 
 // get our request parameters
@@ -301,8 +301,7 @@ getToken = function (headers) {
   }
 };
 
-// connect the api routes under /api/*
-app.use('/api', apiRoutes);
+app.use('/', apiRoutes);
 
 
 function errorEnPeticion(requerimiento, response) {
