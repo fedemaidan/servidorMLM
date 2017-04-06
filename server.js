@@ -265,9 +265,6 @@ apiRoutes.get('/cuentas', (req, res ) => {
           return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
         } else {
           UserML.find( {username: user.name} , (err, usersML) => {
-            for (var i = usersML.length - 1; i >= 0; i--) {
-              console.log(usersML[i].transactions)
-            };
             res.json({success: true, data: usersML})
           })
         }
@@ -379,7 +376,6 @@ function cargarDatosDeUsuario(name, reso) {
               phone: datos.phone,
               status: datos.status,
               reputation: datos.seller_reputation,
-              transactions: datos.transactions,
               expiration_date: new Date(expiration_date)
             });
 
