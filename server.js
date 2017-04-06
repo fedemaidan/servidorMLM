@@ -460,7 +460,7 @@ function guardarPreguntaEnLaBase(req, respuesta, pregunta, username, token) {
     }
     else {
       console.log("ERROR: Falló en la solicitud de item de la pregunta.")
-      guardarPreguntaEnLaBase(req, respuesta, pregunta, username, token)
+      guardarPreguntaEnLaBase(req, respuesta, preg, username, token)
     }
   })
 }
@@ -477,7 +477,7 @@ function cargarPreguntasPrevias(req, respuesta, pregunta, username, token) {
                                     pregunta.preguntas_previas = res.questions;
                                     pregunta.cantidad_preguntas_previas = pregunta.preguntas_previas.length
 
-                                    preg.save(function(err) {
+                                    pregunta.save(function(err) {
                                         if (err) {
                                           console.log(err)
                                         }
