@@ -448,15 +448,7 @@ function guardarPreguntaEnLaBase(req, respuesta, pregunta, username, token) {
         username: username
       })
 
-      cargarPreguntasPrevias(req, respuesta, pregunta, username, token)
-
-      preg.save(function(err) {
-        if (err) {
-          console.log(err)
-        }
-        if (req)
-          avisarNuevaPregunta(req.body);
-      })
+      cargarPreguntasPrevias(req, respuesta, preg, username, token)
     }
     else {
       console.log("ERROR: Falló en la solicitud de item de la pregunta.")
