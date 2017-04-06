@@ -303,7 +303,7 @@ getToken = function (headers) {
 };
 
 // connect the api routes under /api/*
-app.use('/api', apiRoutes);
+app.use('', apiRoutes);
 
 
 function errorEnPeticion(requerimiento, response) {
