@@ -104,28 +104,19 @@ apiRoutes.post('/signup', function(req, res) {
  
  /* OK */
 apiRoutes.post('/authenticate', function(req, res) {
-  
-  User.findOne({
-    name: req.body.name
-  }, function(err, user) {
-    if (err) throw err;
- 
-    if (!user) {
-      res.send({success: false, msg: 'Usuario no encontrado'});
-    } else {
-      // check if password matches
-      user.comparePassword(req.body.password, function (err, isMatch) {
-        if (isMatch && !err) {
-          // if user is found and password is right create a token
-          var token = jwt.encode(user, config.secret);
-          // return the information including token as JSON
-          res.json({success: true, token: 'JWT ' + token});
-        } else {
-          res.send({success: false, msg: 'Password incorrecta.'});
-        }
-      });
-    }
-  });
+  autenticar(req, res);
+});
+
+apiRoutes.post('/authenticate_web', function(req, res) {
+
+  var catpcha = req.body.response_captcha
+  console.log(captcha)
+  if (captcha) {
+    autenticar(req, res);  
+  }
+  else {
+    //error en captcha
+  }
 });
 
 apiRoutes.post('/responder', function(req, res) {
@@ -583,4 +574,28 @@ function avisarPreguntaRespondida(username) {
   var socket = listaSockets[username]
   if (socket)
     socket.emit("actualizarPreguntas", "Pregunta respondida por medio externo")
+}
+
+function autenticar(req, res) {
+  User.findOne({
+    name: req.body.name
+  }, function(err, user) {
+    if (err) throw err;
+ 
+    if (!user) {
+      res.send({success: false, msg: 'Usuario no encontrado'});
+    } else {
+      // check if password matches
+      user.comparePassword(req.body.password, function (err, isMatch) {
+        if (isMatch && !err) {
+          // if user is found and password is right create a token
+          var token = jwt.encode(user, config.secret);
+          // return the information including token as JSON
+          res.json({success: true, token: 'JWT ' + token});
+        } else {
+          res.send({success: false, msg: 'Password incorrecta.'});
+        }
+      });
+    }
+  });
 }
