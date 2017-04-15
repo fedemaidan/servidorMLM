@@ -20,6 +20,10 @@ var UserSchema = new Schema({
   password: {
         type: String,
         required: true
+    },
+  password_pendiente: { 
+        type: String,
+        required: false
     }
 });
  

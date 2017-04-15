@@ -129,7 +129,7 @@ apiRoutes.post('/recuperarContrasena', function(req, res) {
             response: req.body.response_captcha
         }, {}, (reqGoogle, resGoogle) => {
             if (resGoogle.body.success) {
-              recuperarContrasena(req, res);
+              comenzarProcesoRecuperarContrasena(req, res);
             }
             else {
               res.send({success: false, msg: 'Debe completar correctamente el captcha.'});
@@ -618,17 +618,27 @@ function autenticar(req, res) {
   });
 }
 
-function recuperarContrasena(req, res) {
-  console.log(req.body)
+function comenzarProcesoRecuperarContrasena(req, res) {
   User.findOne({
     name: req.body.name
   }, function(err, user) {
     if (err) throw err;
- 
+    
     if (!user) {
       res.send({success: false, msg: 'Usuario no encontrado'});
     } else {
-      console.log("Enviar mail cambio password")
+      user.password_pendiente = req.body.password
+      user.save(function(err) {
+        if (err) {
+          return res.json({success: false, msg: err.message});
+        }
+        console.log("Enviar mail cambio password")
+        res.json({success: true, msg: 'Proceso recuperar contraseña comenzado correctamente'});
+      });
     }
   });
+
+  function cambiarContrasena() {
+
+  }
 }
