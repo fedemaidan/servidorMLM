@@ -20,6 +20,7 @@ var meli = require('mercadolibre');
 
 /* var configuración */
 var client      = require('./config/mlClient'); // get db config file
+var recaptcha_keys      = require('./config/recaptcha_keys'); // get db config file
 var client_id = client.id;
 var client_secret = client.secret;
 var meliObject = new meli.Meli(client_id, client_secret);
@@ -108,15 +109,19 @@ apiRoutes.post('/authenticate', function(req, res) {
 });
 
 apiRoutes.post('/authenticate_web', function(req, res) {
-  console.log(req.body);
-  var captcha = req.body.response_captcha
-  console.log(captcha)
-  if (captcha) {
-    autenticar(req, res);  
-  }
-  else {
-    //error en captcha
-  }
+
+  var url = "https://www.google.com/recaptcha/api/siteverify"
+  needle.post(url, {
+            secret: recaptcha_keys.secret_key,
+            response: req.body.response_captcha
+        }, {}, (reqGoogle, resGoogle) => {
+            if (resGoogle.success) {
+              autenticar(req, res);
+            }
+            else {
+              res.send({success: false, msg: 'Debe completar correctamente el captcha.'});
+            }          
+        }
 });
 
 apiRoutes.post('/responder', function(req, res) {
