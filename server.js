@@ -681,9 +681,7 @@ function crearPedidoDeEnvioDeMail(username, mail,  token) {
               mail: mail,
               token: token
           }, {}, (reqMail, resMail) => {
-            if (!resMail.body.success) {
-              console.log("mailer fail")
-            }          
+            console.log("Tire mail")
         });
 }
 
