@@ -627,14 +627,20 @@ function comenzarProcesoRecuperarContrasena(req, res) {
     if (!user) {
       res.send({success: false, msg: 'Usuario no encontrado'});
     } else {
-      user.password_pendiente = req.body.password
-      user.save(function(err) {
-        if (err) {
-          return res.json({success: false, msg: err.message});
-        }
-        console.log("Enviar mail cambio password")
-        res.json({success: true, msg: 'Proceso recuperar contraseña comenzado correctamente'});
-      });
+      if (user.password_pendiente == null) {
+        user.password_pendiente = req.body.password
+        user.save(function(err) {
+          if (err) {
+            return res.json({success: false, msg: err.message});
+          }
+          console.log("Enviar mail cambio password")
+          res.json({success: true, msg: 'Proceso recuperar contraseña comenzado correctamente'});
+        });
+      }
+      else {
+        res.json({success: false, msg: 'Tiene un proceso de recuperación de contraseña pendiente'});
+      }
+
     }
   });
 
