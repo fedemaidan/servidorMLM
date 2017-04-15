@@ -619,6 +619,7 @@ function autenticar(req, res) {
 }
 
 function recuperarContrasena(req, res) {
+  console.log(req.body)
   User.findOne({
     name: req.body.name
   }, function(err, user) {
