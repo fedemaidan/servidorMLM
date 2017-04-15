@@ -121,7 +121,7 @@ apiRoutes.post('/authenticate_web', function(req, res) {
             else {
               res.send({success: false, msg: 'Debe completar correctamente el captcha.'});
             }          
-        }
+        });
 });
 
 apiRoutes.post('/responder', function(req, res) {
