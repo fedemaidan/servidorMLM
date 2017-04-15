@@ -137,7 +137,7 @@ apiRoutes.post('/recuperarContrasena', function(req, res) {
         });
 });
 
-apiRoutes.post('/confirmaRecuperarContrasena', function(req, res) {
+apiRoutes.get('/confirmaRecuperarContrasena', function(req, res) {
   this.cambiarContrasena(req, res)
 });
 
