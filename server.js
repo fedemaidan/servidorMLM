@@ -667,9 +667,7 @@ function cambiarContrasena(req, res) {
       user.token_password_pendiente = null
 
       user.save(function(err) {
-            res.writeHead(302, {
-              'Location': 'multiml.com'
-            });
+            res.redirect('http://multiml.com')
             res.end();
           }
         )
@@ -688,4 +686,3 @@ function stringGen(len)
     
     return text;
 }
-
