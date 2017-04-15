@@ -640,7 +640,7 @@ function comenzarProcesoRecuperarContrasena(req, res) {
           if (err) {
             return res.json({success: false, msg: err.message});
           }
-          crearPedidoDeEnvioDeMail( req.body.name , user.token_password_pendiente )
+          crearPedidoDeEnvioDeMail( req.body.name , user.mail,  user.token_password_pendiente )
           res.json({success: true, msg: 'Proceso recuperar contraseña comenzado correctamente'});
         });
       }
