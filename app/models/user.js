@@ -3,9 +3,6 @@ var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 const Email = require('mongoose-type-mail');
 
-// Thanks to http://blog.matoski.com/articles/jwt-express-node-mongoose/
- 
-// set up a mongoose model
 var UserSchema = new Schema({
   name: {
         type: String,
@@ -24,7 +21,12 @@ var UserSchema = new Schema({
   password_pendiente: { 
         type: String,
         required: false
+    },
+  token_password_pendiente: { 
+        type: String,
+        required: false
     }
+
 });
  
 UserSchema.pre('save', function (next) {

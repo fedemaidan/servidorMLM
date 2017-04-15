@@ -137,6 +137,10 @@ apiRoutes.post('/recuperarContrasena', function(req, res) {
         });
 });
 
+apiRoutes.post('/confirmaRecuperarContrasena', function(req, res) {
+  this.cambiarContrasena(req, res)
+});
+
 apiRoutes.post('/responder', function(req, res) {
   UserML.findOne({
     id_ml: req.body.user_id_ml
@@ -629,6 +633,8 @@ function comenzarProcesoRecuperarContrasena(req, res) {
     } else {
       if (user.password_pendiente == null) {
         user.password_pendiente = req.body.password
+        user.token_password_pendiente = stringGen(100);
+
         user.save(function(err) {
           if (err) {
             return res.json({success: false, msg: err.message});
@@ -638,13 +644,48 @@ function comenzarProcesoRecuperarContrasena(req, res) {
         });
       }
       else {
-        res.json({success: false, msg: 'Tiene un proceso de recuperación de contraseña pendiente'});
+        res.json({success: false, msg: 'Tiene un proceso de recuperación de contraseña pendiente. Debe completar el mismo.'});
       }
 
     }
   });
-
-  function cambiarContrasena() {
-
-  }
 }
+
+function cambiarContrasena(req, res) {
+
+  User.findOne({
+    name: req.query.user,
+    token_password_pendiente: req.query.token
+  }, function(err, user) {
+    if (err) throw err;
+    
+    if (!user) {
+      res.send({success: false, msg: 'Datos incorrectos'});
+    } else {
+      user.password = user.password_pendiente
+      user.password_pendiente = null
+      user.token_password_pendiente = null
+
+      user.save(function(err) {
+            res.writeHead(302, {
+              'Location': 'multiml.com'
+            });
+            res.end();
+          }
+        )
+    }
+  });   
+}
+
+function stringGen(len)
+{
+    var text = " ";
+    
+    var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+    
+    for( var i=0; i < len; i++ )
+        text += charset.charAt(Math.floor(Math.random() * charset.length));
+    
+    return text;
+}
+
