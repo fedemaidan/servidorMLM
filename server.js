@@ -109,16 +109,27 @@ apiRoutes.post('/authenticate', function(req, res) {
 });
 
 apiRoutes.post('/authenticate_web', function(req, res) {
-
-  var url = "https://www.google.com/recaptcha/api/siteverify"
-  needle.post(url, {
+  
+  needle.post(recaptcha_keys.url, {
             secret: recaptcha_keys.secret_key,
             response: req.body.response_captcha
         }, {}, (reqGoogle, resGoogle) => {
-          console.log(resGoogle)
-          console.log(reqGoogle)
             if (resGoogle.body.success) {
               autenticar(req, res);
+            }
+            else {
+              res.send({success: false, msg: 'Debe completar correctamente el captcha.'});
+            }          
+        });
+});
+
+apiRoutes.post('/recuperarContrasena', function(req, res) {
+  needle.post(recaptcha_keys.url, {
+            secret: recaptcha_keys.secret_key,
+            response: req.body.response_captcha
+        }, {}, (reqGoogle, resGoogle) => {
+            if (resGoogle.body.success) {
+              recuperarContrasena(req, res);
             }
             else {
               res.send({success: false, msg: 'Debe completar correctamente el captcha.'});
@@ -603,6 +614,20 @@ function autenticar(req, res) {
           res.send({success: false, msg: 'Password incorrecta.'});
         }
       });
+    }
+  });
+}
+
+function recuperarContrasena(req, res) {
+  User.findOne({
+    name: req.body.name
+  }, function(err, user) {
+    if (err) throw err;
+ 
+    if (!user) {
+      res.send({success: false, msg: 'Usuario no encontrado'});
+    } else {
+      console.log("Enviar mail cambio password")
     }
   });
 }
