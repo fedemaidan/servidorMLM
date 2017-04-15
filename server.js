@@ -108,7 +108,7 @@ apiRoutes.post('/authenticate', function(req, res) {
 });
 
 apiRoutes.post('/authenticate_web', function(req, res) {
-
+  console.log(req.body);
   var catpcha = req.body.response_captcha
   console.log(captcha)
   if (captcha) {
