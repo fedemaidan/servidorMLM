@@ -19,8 +19,9 @@ var cron = require('node-cron');
 var meli = require('mercadolibre');
 
 /* var configuración */
-var client      = require('./config/mlClient'); // get db config file
-var recaptcha_keys      = require('./config/recaptcha_keys'); // get db config file
+var client      = require('./config/mlClient'); 
+var mailer      = require('./config/mailer'); 
+var recaptcha_keys      = require('./config/recaptcha_keys'); 
 var client_id = client.id;
 var client_secret = client.secret;
 var meliObject = new meli.Meli(client_id, client_secret);
@@ -639,7 +640,7 @@ function comenzarProcesoRecuperarContrasena(req, res) {
           if (err) {
             return res.json({success: false, msg: err.message});
           }
-          console.log("Enviar mail cambio password")
+          crearPedidoDeEnvioDeMail( req.body.name , user.token_password_pendiente )
           res.json({success: true, msg: 'Proceso recuperar contraseña comenzado correctamente'});
         });
       }
@@ -674,6 +675,17 @@ function cambiarContrasena(req, res) {
     }
   });   
 }
+function crearPedidoDeEnvioDeMail(username, mail,  token) {
+  needle.post(mailer.url, {
+              username: username,
+              mail: mail,
+              token: token
+          }, {}, (reqMail, resMail) => {
+            if (!resMail.body.success) {
+              console.log("mailer fail")
+            }          
+        });
+}
 
 function stringGen(len)
 {
@@ -686,3 +698,5 @@ function stringGen(len)
     
     return text;
 }
+
+
