@@ -138,9 +138,9 @@ apiRoutes.post('/recuperarContrasena', function(req, res) {
         });
 });
 
-apiRoutes.post('/recuperarContrasenaTest', function(req, res)) {
+apiRoutes.post('/recuperarContrasenaTest', function(req, res) {
   crearPedidoDeEnvioDeMail("fede", "fede.maidan@gmail.com",  "token");
-}
+});
 
 apiRoutes.get('/confirmaRecuperarContrasena', function(req, res) {
   cambiarContrasena(req, res)
