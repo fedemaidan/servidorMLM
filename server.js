@@ -40,10 +40,10 @@ app.use(passport.initialize());
 
 /*SOCKET */
 io.on('connection', function(socket){
+  console.log("se conecto alguien ")
   socket.on('hola', function(usuario){
      console.log('Se conecto ' + usuario);
      listaSockets[usuario] = socket
-     
   });
 });
 
@@ -52,6 +52,7 @@ http.listen(3000, function(){
 });
 
 /*SOCKET FIN*/
+
 // demo Route (GET http://localhost:8080)
 app.get('/', function(req, res) {
   res.send('Hello! The API is at http://localhost:' + port + '/api');
