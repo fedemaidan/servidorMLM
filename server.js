@@ -186,9 +186,9 @@ apiRoutes.post('/sincronizarNuevamentePreguntas', function(req, res) {
     } else {
       return res.status(403).send({success: false, msg: 'No token provided.'});
     }
-  });
-
 });
+
+
 
 
 
