@@ -28,14 +28,8 @@ var meliObject = new meli.Meli(client_id, client_secret);
 var urlActual = "https://f0a97c00.ngrok.io/"
 var listaSockets = []
 
-io.set("origins = localhost");
-io.set('transports', [
-    'websocket'
-    , 'flashsocket'
-    , 'htmlfile'
-    , 'xhr-polling'
-    , 'jsonp-polling'
-]);
+io.set('origins', 'http://localhost:4200');
+
 
 // get our request parameters
 app.use(bodyParser.urlencoded({ extended: false }));
