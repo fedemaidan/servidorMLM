@@ -28,7 +28,7 @@ var meliObject = new meli.Meli(client_id, client_secret);
 var urlActual = "https://f0a97c00.ngrok.io/"
 var listaSockets = []
 
-io.set('origins', '*:*');
+io.origins('*:*') 
 
 
 
