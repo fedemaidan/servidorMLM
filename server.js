@@ -138,10 +138,6 @@ apiRoutes.post('/recuperarContrasena', function(req, res) {
         });
 });
 
-apiRoutes.post('/recuperarContrasenaTest', function(req, res) {
-  crearPedidoDeEnvioDeMail("fede", "fede.maidan@gmail.com",  "token");
-});
-
 apiRoutes.get('/confirmaRecuperarContrasena', function(req, res) {
   cambiarContrasena(req, res)
 });
@@ -170,6 +166,31 @@ apiRoutes.post('/responder', function(req, res) {
     }
   });
 });
+
+apiRoutes.post('/sincronizarNuevamentePreguntas', function(req, res) {
+  var token = getToken(req.headers);
+
+  if (token) {
+      var decoded = jwt.decode(token, config.secret);
+      User.findOne({
+        name: decoded.name
+      }, function(err, user) {
+          if (err) throw err;
+   
+          if (!user) {
+            return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
+          } else {
+            sincronizarNuevamentePreguntas(decoded.name);
+          }
+      });
+    } else {
+      return res.status(403).send({success: false, msg: 'No token provided.'});
+    }
+  });
+
+});
+
+
 
 apiRoutes.get('/memberinfo', passport.authenticate('jwt', { session: false}), function(req, res) {
   var token = getToken(req.headers);
@@ -700,7 +721,6 @@ function crearPedidoDeEnvioDeMail(username, mail,  token) {
 function stringGen(len)
 {
     var text = " ";
-    
     var charset = "abcdefghijklmnopqrstuvwxyz0123456789";
     
     for( var i=0; i < len; i++ )
@@ -710,3 +730,18 @@ function stringGen(len)
 }
 
 
+
+function sincronizarNuevamentePreguntas(name) {
+  Pregunta.remove( {username: name}, (err) => {
+      if (err)
+        console.log(err)
+      else
+      {
+        UserML.find( {username: name} , (err, usersML) => {
+            usersML.forEach( (cuenta) => {
+              cargarPreguntas(name, cuenta.token,0)
+            })
+        })
+      }
+    });
+}
