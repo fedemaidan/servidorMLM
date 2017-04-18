@@ -158,11 +158,12 @@ apiRoutes.post('/responder', function(req, res) {
       meliObject.post('answers?access_token='+user.token, { question_id: req.body.question_id, text: req.body.text }, {} , 
         (req2, pregunta) => {
           if (pregunta.status == "ANSWERED") {
-            Pregunta.update( { question_id: pregunta.id}, 
-                                { status: pregunta.status,
-                                  answer: pregunta.answer} , {} , (pregunta) => {
-                                    res.json({success: true, msg: 'Respondida correctamente'});
-                                });
+            Pregunta.remove( {question_id: pregunta.id}, (err) => {
+                if (err)
+                  console.log(err)
+                else
+                  res.json({success: true, msg: 'Respondida correctamente'});
+              } )
           }
             
         })
@@ -505,11 +506,13 @@ function cargarNuevaPregunta(req) {
       if (user) {
         meliObject.get( req.body.resource, { access_token: user.token}, (request, pregunta ) => {
           if (pregunta.status == 'ANSWERED'){
-              Pregunta.update( { question_id: pregunta.id}, 
-                                { status: pregunta.status,
-                                  answer: pregunta.answer} , {} , (pregunta) => {
-                                    console.log("Registro respuesta en la base")
-                                });
+              Pregunta.remove( {question_id: pregunta.id}, (err) => {
+                if (err)
+                  console.log(err)
+                else
+                  res.json({success: true, msg: 'Registro respuesta en la base'});
+              } )
+
               avisarPreguntaRespondida(user.username)
           }
           else
