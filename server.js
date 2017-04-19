@@ -229,14 +229,12 @@ apiRoutes.get('/usuarioML', function(req, res) {
     autorizarEnML(req.query.code, urlActual+'usuarioML?user='+name, (req2, reso) => {
       if (!(errorEnPeticion(req2, reso))) {
         cargarDatosDeUsuario(name,reso);
-
         res.json({success: true, msg: 'Bienvenido '+ name});
        }
        else {
             enviarMensajeSocket(name, "error", "'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'")
+            res.json({success: false, msg: 'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'});  
           }
-          res.json({success: false, msg: 'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'});  
-       }
     })
   }
 });
