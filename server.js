@@ -416,7 +416,6 @@ function cargarDatosDeUsuario(name, reso) {
             newUser.save(function(err) {
               if (err) {
                 enviarMensajeSocket(name, "error", "'Usuario de mercadolibre ya registrado'")
-              }
                 return {success: false, msg: 'Username ya existe.'};
               }
               else {
