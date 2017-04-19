@@ -61,14 +61,6 @@ http.listen(3000, function(){
 app.get('/', function(req, res) {
   res.send('Hello! The API is at http://localhost:' + port + '/api');
 });
-
-app.get('/notificacion', function(req, res) {
-  var socket = listaSockets["notifica"]
-    if (socket) {
-      socket.emit("notificacion", "mensaje")
-    }
-  res.send('Hello! The API is at http://localhost:' + port + '/api');
-});
  
 // Start the server
 app.listen(port);
@@ -238,16 +230,10 @@ apiRoutes.get('/usuarioML', function(req, res) {
       if (!(errorEnPeticion(req2, reso))) {
         cargarDatosDeUsuario(name,reso);
 
-        var socket = listaSockets[name]
-        if (socket)
-          socket.emit("nuevaCuenta", "Bienvenido")
-        
         res.json({success: true, msg: 'Bienvenido '+ name});
        }
        else {
-          var socket = listaSockets[name]
-          if (socket) {
-            socket.emit("errorNuevaCuenta", 'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde')
+            enviarMensajeSocket(name, "error", "'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'")
           }
           res.json({success: false, msg: 'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'});  
        }
@@ -379,28 +365,33 @@ function removerUsuarioML(nickname, username, id_ml) {
                   id_ml: id_ml
                 }, function(err) {
             if (!err) {
-                    if (socket)
-                      socket.emit("nuevaCuenta", "Borre cuenta")
+                    if (socket){
+                      enviarMensajeSocket(username, "exito", "Cuenta borrada con exito")
+                      enviarMensajeSocket(username, "actualizar", "CUENTAS")
+                    }
             }
             else {
-                    console.log("no borreee")
+                    enviarMensajeSocket(username, "error", "Error borrando cuenta ML")
                     console.log(err)
             }
         }
     );
+
   Pregunta.remove({
     seller_id: id_ml
   }, function(err) {
         if (!err) {
               if (socket)
-                socket.emit("actualizarPreguntas", "Borre cuenta")
+                enviarMensajeSocket(username, "actualizar", "PREGUNTAS")
             }
             else {
-                    console.log("no borreee")
-                    console.log(err)
+              enviarMensajeSocket(username, "error", "Error borrando cuenta ML")
+              console.log(err)
             }
     })
 }
+
+
 function cargarDatosDeUsuario(name, reso) {
   meliObject.get('users/me?access_token='+reso.access_token, (req2, datos) => {
         if (!(errorEnPeticion(req2, datos))) {
@@ -426,16 +417,19 @@ function cargarDatosDeUsuario(name, reso) {
 
             newUser.save(function(err) {
               if (err) {
-                console.log(err)
-                var socket = listaSockets[name]
-                if (socket) {
-                  socket.emit("errorNuevaCuenta", 'Username ya esta registrado.')
-                }
+                enviarMensajeSocket(name, "error", "'Usuario de mercadolibre ya registrado'")
+              }
                 return {success: false, msg: 'Username ya existe.'};
               }
+              else {
+                cargarPreguntas(name, reso.access_token ,0)
+                enviarMensajeSocket(name, "exito", "Bienvenido")
+                enviarMensajeSocket(name, "actualizar", "CUENTAS")
 
-              cargarPreguntas(name, reso.access_token ,0)
-              return {success: true, msg: 'Cuenta registrada con exito'};
+                return {success: true, msg: 'Cuenta registrada con exito'};
+              }
+
+              
             })
           
         }
@@ -543,8 +537,7 @@ function cargarNuevaPregunta(req) {
                 else
                   console.log("Registro respuesta en la base")
               } )
-
-              avisarPreguntaRespondida(user.username)
+              enviarMensajeSocket(user.username, "actualizar", "PREGUNTAS")
           }
           else
             guardarPreguntaEnLaBase(req, pregunta, pregunta, user.username, user.token)
@@ -579,10 +572,7 @@ function refrescarToken() {
               if (err) {
                 console.log(err)
               }
-
-              var socket = listaSockets[user.username]
-              if (socket)
-                socket.emit("nuevaCuenta", "Actualice cuenta")
+              enviarMensajeSocket(user.username, "actualizar", "CUENTAS")
             })
 
             return { res: res, req: req }
@@ -621,20 +611,11 @@ function avisarNuevaPregunta(mensaje) {
   var resource = mensaje.resource
 
   UserML.findOne( {id_ml: user_id} , (err, userML) => {
-    var socket = listaSockets[userML.username]
-    if (socket) {
-      socket.emit("actualizarPreguntas", resource)
-      socket.emit("notificacion", "mensaje")
-    }
-      
+    
+    enviarMensajeSocket(userML.username, "actualizar", "PREGUNTAS") 
+    enviarMensajeSocket(userML.username, "notificacion", "mensaje")
   })
   
-}
-
-function avisarPreguntaRespondida(username) {
-  var socket = listaSockets[username]
-  if (socket)
-    socket.emit("actualizarPreguntas", "Pregunta respondida por medio externo")
 }
 
 function autenticar(req, res) {
@@ -749,4 +730,15 @@ function sincronizarNuevamentePreguntas(name) {
         })
       }
     });
+}
+
+
+function enviarMensajeSocket(name, evento, mensaje) {
+  var socket = listaSockets[name]
+  if (socket) {
+    socket.emit(evento, mensaje)
+    return true;
+  }
+  else
+    return false;
 }
