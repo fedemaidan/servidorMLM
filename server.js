@@ -231,7 +231,7 @@ apiRoutes.get('/usuarioML', function(req, res) {
       if (!(errorEnPeticion(req2, reso))) {
         cargarDatosDeUsuario(name,reso);
 
-          res.redirect('http://multiml.com/configuracion');
+          res.redirect('http://multiml.com/#/configuracion');
           // res.json({success: true, msg: 'Bienvenido '+ name});
           // res.end();
        }
