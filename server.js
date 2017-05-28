@@ -231,9 +231,9 @@ apiRoutes.get('/usuarioML', function(req, res) {
       if (!(errorEnPeticion(req2, reso))) {
         cargarDatosDeUsuario(name,reso);
 
-          res.writeHead(301, {Location: 'http://multiml.com/configuracion'});
-          res.json({success: true, msg: 'Bienvenido '+ name});
-          res.end();
+          res.redirect('http://multiml.com/configuracion');
+          // res.json({success: true, msg: 'Bienvenido '+ name});
+          // res.end();
        }
        else {
             enviarMensajeSocket(name, "error", "'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'")
