@@ -230,10 +230,7 @@ apiRoutes.get('/usuarioML', function(req, res) {
     autorizarEnML(req.query.code, urlActual+'usuarioML?user='+name, (req2, reso) => {
       if (!(errorEnPeticion(req2, reso))) {
         cargarDatosDeUsuario(name,reso);
-
           res.redirect('http://multiml.com/#/configuracion');
-          // res.json({success: true, msg: 'Bienvenido '+ name});
-          // res.end();
        }
        else {
             enviarMensajeSocket(name, "error", "'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'")
@@ -419,8 +416,6 @@ function cargarDatosDeUsuario(name, reso) {
 
             newUser.save(function(err) {
               if (err) {
-                console.log(err);
-                console.dump(err);
                 enviarMensajeSocket(name, "error", "'Usuario de mercadolibre ya registrado'")
                 return {success: false, msg: 'Username ya existe.'};
               }
