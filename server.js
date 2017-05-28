@@ -1,17 +1,17 @@
 var express     = require('express');
 var app         = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var http        = require('http').Server(app);
+var io          = require('socket.io')(http);
 var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
-var passport	= require('passport');
-var needle = require('needle');
+var passport	  = require('passport');
+var needle      = require('needle');
 var config      = require('./config/database'); // get db config file
 var User        = require('./app/models/user'); // get the mongoose model
-var Socket        = require('./app/models/socket'); // get the mongoose model
-var UserML        = require('./app/models/userML'); // get the mongoose model
-var Pregunta        = require('./app/models/pregunta');
+var Socket      = require('./app/models/socket'); // get the mongoose model
+var UserML      = require('./app/models/userML'); // get the mongoose model
+var Pregunta    = require('./app/models/pregunta');
 var port        = process.env.PORT || 8080;
 var jwt         = require('jwt-simple');
 var cors = require('cors');
@@ -212,6 +212,7 @@ apiRoutes.get('/memberinfo', passport.authenticate('jwt', { session: false}), fu
 apiRoutes.get('/iniciarConML', (req, res ) => {
     var name = req.query.user;
     var url = meliObject.getAuthURL(urlActual+'usuarioML?user='+name)
+
     res.json({success: true, url: url});
 })
 
@@ -229,7 +230,10 @@ apiRoutes.get('/usuarioML', function(req, res) {
     autorizarEnML(req.query.code, urlActual+'usuarioML?user='+name, (req2, reso) => {
       if (!(errorEnPeticion(req2, reso))) {
         cargarDatosDeUsuario(name,reso);
-        res.json({success: true, msg: 'Bienvenido '+ name});
+
+          res.writeHead(301, {Location: 'http://multiml.com/configuracion'});
+          res.json({success: true, msg: 'Bienvenido '+ name});
+          res.end();
        }
        else {
             enviarMensajeSocket(name, "error", "'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'")
