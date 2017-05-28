@@ -233,7 +233,7 @@ apiRoutes.get('/usuarioML', function(req, res) {
           res.redirect('http://multiml.com/#/configuracion');
        }
        else {
-            enviarMensajeSocket(name, "error", "'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'")
+            enviarMensajeSocket(name, "error_mensaje", "'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'")
             res.json({success: false, msg: 'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'});  
           }
     })
@@ -370,7 +370,7 @@ function removerUsuarioML(nickname, username, id_ml) {
                     }
             }
             else {
-                    enviarMensajeSocket(username, "error", "Error borrando cuenta ML")
+                    enviarMensajeSocket(username, "error_mensaje", "Error borrando cuenta ML")
                     console.log(err)
             }
         }
@@ -384,7 +384,7 @@ function removerUsuarioML(nickname, username, id_ml) {
                 enviarMensajeSocket(username, "actualizar", "PREGUNTAS")
             }
             else {
-              enviarMensajeSocket(username, "error", "Error borrando cuenta ML")
+              enviarMensajeSocket(username, "error_mensaje", "Error borrando cuenta ML")
               console.log(err)
             }
     })
@@ -416,7 +416,7 @@ function cargarDatosDeUsuario(name, reso) {
 
             newUser.save(function(err) {
               if (err) {
-                enviarMensajeSocket(name, "error2", "'Usuario de mercadolibre ya registrado'")
+                enviarMensajeSocket(name, "error_mensaje", "'Usuario de mercadolibre ya registrado'")
                 return {success: false, msg: 'Username ya existe.'};
               }
               else {
