@@ -517,6 +517,10 @@ function cargarPreguntasPrevias(req, respuesta, pregunta, username, token) {
                                       })
                                   })
   }
+  else {
+    console.log( "Error con la pregunta")
+    console.log(pregunta)
+  }
 }
 
 function cargarNuevaPregunta(req) {
