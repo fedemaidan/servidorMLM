@@ -495,7 +495,9 @@ function guardarPreguntaEnLaBase(req, respuesta, pregunta, username, token) {
 }
 
 function cargarPreguntasPrevias(req, respuesta, pregunta, username, token) {
-  meliObject.get('questions/search',
+
+  if (pregunta.from) {
+    meliObject.get('questions/search',
                                   {  
                                     item: pregunta.item_id, 
                                     from: pregunta.from.id,
@@ -514,6 +516,7 @@ function cargarPreguntasPrevias(req, respuesta, pregunta, username, token) {
                                           avisarNuevaPregunta(req.body);
                                       })
                                   })
+  }
 }
 
 function cargarNuevaPregunta(req) {
