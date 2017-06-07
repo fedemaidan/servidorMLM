@@ -51,6 +51,7 @@ io.on('connection', function(socket){
           listaSockets[usuario][listaSockets[usuario].length] = socket
      }
      else {
+          listaSockets[usuario] = []
           listaSockets[usuario][0] = socket
      }
   });
