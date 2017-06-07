@@ -50,6 +50,9 @@ io.on('connection', function(socket){
      if (typeof listaSockets[usuario] !== 'undefined') {
           listaSockets[usuario][listaSockets[usuario].length] = socket
      }
+     else {
+          listaSockets[usuario][0] = socket
+     }
   });
 });
 
