@@ -47,7 +47,7 @@ io.on('connection', function(socket){
   console.log("se conecto alguien ")
   socket.on('hola', function(usuario){
      console.log('Se conecto ' + usuario);
-     listaSockets[usuario][] = socket
+     listaSockets[usuario][listaSockets[usuario].length] = socket
   });
 });
 
