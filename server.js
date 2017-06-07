@@ -47,9 +47,20 @@ io.on('connection', function(socket){
   console.log("se conecto alguien ")
   socket.on('hola', function(usuario){
      console.log('Se conecto ' + usuario);
-     listaSockets[usuario] = socket
+     listaSockets[usuario][] = socket
   });
 });
+
+socket.on('disconnect', function (socketDisconnect) {
+    listaSockets.forEach( (usuariosSockets) => {
+      usuariosSockets.forEach( (socket, key) => {
+        if (socket == socketDisconnect) {
+          console.log("socket disconnect")
+          usuariosSockets.splice(key,1)
+        }
+      })
+    })
+  });
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
@@ -739,9 +750,11 @@ function sincronizarNuevamentePreguntas(name) {
 
 
 function enviarMensajeSocket(name, evento, mensaje) {
-  var socket = listaSockets[name]
-  if (socket) {
-    socket.emit(evento, mensaje)
+  var sockets = listaSockets[name]
+  if (sockets) {
+    sockets.forEach( (socket) => {
+      socket.emit(evento, mensaje)  
+    })
     return true;
   }
   else
