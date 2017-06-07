@@ -51,7 +51,7 @@ io.on('connection', function(socket){
   });
 });
 
-socket.on('disconnect', function (socketDisconnect) {
+io.on('disconnect', function (socketDisconnect) {
     listaSockets.forEach( (usuariosSockets) => {
       usuariosSockets.forEach( (socket, key) => {
         if (socket == socketDisconnect) {
