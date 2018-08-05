@@ -25,7 +25,7 @@ var recaptcha_keys      = require('./config/recaptcha_keys');
 var client_id = client.id;
 var client_secret = client.secret;
 var meliObject = new meli.Meli(client_id, client_secret);
-var urlActual = "https://f0a97c00.ngrok.io/"
+var urlActual = "http://localhost:88/"
 var listaSockets = []
 
 io.origins('*:*') 
@@ -95,7 +95,7 @@ apiRoutes.use(cors())
 
 
 cron.schedule('* * * * *', function(){
-  refrescarToken()
+  //refrescarToken()
 });
 
 // create a new user account (POST http://localhost:8080/api/signup)
@@ -239,7 +239,7 @@ apiRoutes.get('/refresh_token', (req, res ) => {
 })
 
 apiRoutes.get('/usuarioML', function(req, res) {
-  
+  console.log("aaa");
   if (!req.query.user ) {
     res.json({success: false, msg: 'Falta cargar usuario.'});
   } else {  
@@ -247,7 +247,7 @@ apiRoutes.get('/usuarioML', function(req, res) {
     autorizarEnML(req.query.code, urlActual+'usuarioML?user='+name, (req2, reso) => {
       if (!(errorEnPeticion(req2, reso))) {
         cargarDatosDeUsuario(name,reso);
-          res.redirect('http://multiml.com/#/configuracion');
+          res.redirect('http://localhost:4200/#/configuracion');
        }
        else {
             enviarMensajeSocket(name, "error_mensaje", "'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'")
@@ -410,8 +410,9 @@ function removerUsuarioML(nickname, username, id_ml) {
 
 function cargarDatosDeUsuario(name, reso) {
   meliObject.get('users/me?access_token='+reso.access_token, (req2, datos) => {
+
         if (!(errorEnPeticion(req2, datos))) {
-          
+          console.log("Tengo acceso al usuario");  
           var expiration_date = new Date(Date.now());
           expiration_date = expiration_date.getTime() + (reso.expires_in * 1000);
 
@@ -432,11 +433,14 @@ function cargarDatosDeUsuario(name, reso) {
             });
 
             newUser.save(function(err) {
+
               if (err) {
+                console.log(err)
                 enviarMensajeSocket(name, "error_mensaje", "'Usuario de mercadolibre ya registrado'")
                 return {success: false, msg: 'Username ya existe.'};
               }
               else {
+                console.log("Guarde usuario");  
                 cargarPreguntas(name, reso.access_token ,0)
                 enviarMensajeSocket(name, "exito", "Bienvenido")
                 enviarMensajeSocket(name, "actualizar", "CUENTAS")

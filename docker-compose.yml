@@ -1,0 +1,9 @@
+version: "2"
+services:
+  servidor_multiml:
+    environment:
+    - USER=milito
+    - PASS=lautaro
+    image: fedemaidan/servidor-multiml
+    ports:
+      - "88:3000"

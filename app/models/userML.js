@@ -51,4 +51,4 @@ var UserMLSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('UserML', UserMLSchema);
+module.exports = mongoose.model('ML_User', UserMLSchema);
