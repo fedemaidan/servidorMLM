@@ -95,7 +95,7 @@ apiRoutes.use(cors())
 
 
 cron.schedule('* * * * *', function(){
-  //refrescarToken()
+  refrescarToken()
 });
 
 // create a new user account (POST http://localhost:8080/api/signup)
@@ -165,8 +165,10 @@ apiRoutes.post('/responder', function(req, res) {
     if (!user) {
       res.send({success: false, msg: 'No se encuentra usuario'});
     } else {
+      console.log("pase por aqui")
       meliObject.post('answers?access_token='+user.token, { question_id: req.body.question_id, text: req.body.text }, {} , 
         (req2, pregunta) => {
+          console.log(pregunta)
           if (pregunta.status == "ANSWERED") {
             Pregunta.remove( {question_id: pregunta.id}, (err) => {
                 if (err)

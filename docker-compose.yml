@@ -7,3 +7,12 @@ services:
     image: fedemaidan/servidor-multiml
     ports:
       - "88:3000"
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - /data/db_respondeme:/data/db_respondeme
+    ports:
+      - "27018:27017"
