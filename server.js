@@ -25,7 +25,7 @@ var recaptcha_keys      = require('./config/recaptcha_keys');
 var client_id = client.id;
 var client_secret = client.secret;
 var meliObject = new meli.Meli(client_id, client_secret);
-var urlActual = "http://api.respondele.com/"
+var urlActual = "https://api.respondele.com/"
 var listaSockets = []
 
 io.origins('*:*') 
