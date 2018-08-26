@@ -249,7 +249,7 @@ apiRoutes.get('/usuarioML', function(req, res) {
     autorizarEnML(req.query.code, urlActual+'usuarioML?user='+name, (req2, reso) => {
       if (!(errorEnPeticion(req2, reso))) {
         cargarDatosDeUsuario(name,reso);
-          res.redirect('http://localhost:4200/#/configuracion');
+          res.redirect('https://respondele.com/#/configuracion');
        }
        else {
             enviarMensajeSocket(name, "error_mensaje", "'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'")
