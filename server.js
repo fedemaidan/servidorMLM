@@ -25,7 +25,8 @@ var recaptcha_keys      = require('./config/recaptcha_keys');
 var client_id = client.id;
 var client_secret = client.secret;
 var meliObject = new meli.Meli(client_id, client_secret);
-var urlActual = "https://api.respondele.com/"
+//var urlActual = "https://api.respondele.com/"
+var urlActual = "http://localhost:88/"
 var listaSockets = []
 
 io.origins('*:*') 
@@ -241,7 +242,6 @@ apiRoutes.get('/refresh_token', (req, res ) => {
 })
 
 apiRoutes.get('/usuarioML', function(req, res) {
-  console.log("aaa");
   if (!req.query.user ) {
     res.json({success: false, msg: 'Falta cargar usuario.'});
   } else {  
@@ -249,7 +249,8 @@ apiRoutes.get('/usuarioML', function(req, res) {
     autorizarEnML(req.query.code, urlActual+'usuarioML?user='+name, (req2, reso) => {
       if (!(errorEnPeticion(req2, reso))) {
         cargarDatosDeUsuario(name,reso);
-          res.redirect('https://respondele.com/#/configuracion');
+          //res.redirect('https://respondele.com/#/configuracion');
+          res.redirect('http://localhost:4200/#/configuracion');
        }
        else {
             enviarMensajeSocket(name, "error_mensaje", "'Hubo un problema con ML para registrar la cuenta. Por favor pruebe mas tarde'")
