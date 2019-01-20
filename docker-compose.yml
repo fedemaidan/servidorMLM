@@ -1,14 +1,12 @@
 version: "2"
 services:
   servidor_multiml:
-    environment:
-    - USER=milito
-    - PASS=lautaro
     image: fedemaidan/servidor-multiml
     ports:
       - "88:3000"
     links:
       - mongo
+    env_file: dev.env
   mongo:
     container_name: mongo
     image: mongo

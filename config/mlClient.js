@@ -1,4 +1,4 @@
 module.exports = {
-  'id': '3768661395914657',
-  'secret': '6IYU8WPeqe37EbJCRyjrOHivvMEk7AHr'
+  'id': process.env.ML_CLIENT_ID,
+  'secret': process.env.ML_CLIENT_SECRET
 };
