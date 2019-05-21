@@ -593,13 +593,13 @@ function cargarNuevaPregunta(req) {
 function refrescarToken() {
   var date = new Date(Date.now());
   date = date.getTime();
-  console.log(date)
+
   UserML.find( { expiration_date: { $lt: date }}, (err, users) => {
     users.forEach( (user) => {
-        console.log(user)
         var url = 'https://api.mercadolibre.com/oauth/token?grant_type=refresh_token&client_id='+client_id+'&client_secret='+client_secret+'&refresh_token='+user.refresh_token
         needle.post(url, {}, {}, (req, res) => {
-            console.log(res)
+            console.log(url)
+            console.log(res.body)
             var expiration_date = new Date(Date.now());
             expiration_date = expiration_date.getTime() + (res.body.expires_in * 1000);
             
