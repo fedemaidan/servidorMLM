@@ -12,19 +12,21 @@ var User        = require('./app/models/user'); // get the mongoose model
 var Socket      = require('./app/models/socket'); // get the mongoose model
 var UserML      = require('./app/models/userML'); // get the mongoose model
 var Pregunta    = require('./app/models/pregunta');
+var borrarPregunta = require('./app/resolvers/borrarPregunta.js');
+var getCuentasByToken = require('./app/resolvers/getCuentasByToken.js');
 var port        = process.env.PORT || 8080;
 var jwt         = require('jwt-simple');
 var cors = require('cors');
 var cron = require('node-cron');
 var meli = require('mercadolibre');
-
-/* var configuración */
 var client      = require('./config/mlClient'); 
-var mailer      = require('./config/mailer'); 
-var recaptcha_keys      = require('./config/recaptcha_keys'); 
 var client_id = client.id;
 var client_secret = client.secret;
 var meliObject = new meli.Meli(client_id, client_secret);
+
+/* var configuración */
+var mailer      = require('./config/mailer'); 
+var recaptcha_keys      = require('./config/recaptcha_keys'); 
 var urlActual = process.env.API
 var listaSockets = []
 
@@ -277,6 +279,14 @@ apiRoutes.post('/removerUsuarioML', function(req, res) {
     }
 });
 
+apiRoutes.delete('/pregunta/:id', async (req, res ) => {
+  var token = getToken(req.headers)
+  var decoded = jwt.decode(token, config.secret)
+  var question_id = req.params.id
+  borrarPregunta(decoded.name, question_id, res) 
+})
+
+
 apiRoutes.get('/preguntas', (req, res ) => {
     var token = getToken(req.headers);
     if (token) {
@@ -489,32 +499,34 @@ function cargarPreguntas(username, token, offset) {
 }
 
 function guardarPreguntaEnLaBase(req, respuesta, pregunta, username, token) {
-
   meliObject.get('items/'+pregunta.item_id, {}, (req2, item) => {
-      if (!(errorEnPeticion(req, respuesta))) {
-        var preg = new Pregunta({
-        date_created: pregunta.date_created,
-        question_id: pregunta.id,
-        item_id: pregunta.item_id,
-        item: item,
-        status: pregunta.status,
-        text: pregunta.text,
-        deleted_from_listing: pregunta.deleted_from_listing,
-        hold: pregunta.hold,
-        answer: pregunta.answer,
-        seller_id: pregunta.seller_id,
-        from: pregunta.from,
-        username: username
-      })
+      meliObject.get('users/'+pregunta.from.id, {}, (req3, from) => {
+          if (!(errorEnPeticion(req, respuesta))) {
+            var preg = new Pregunta({
+            date_created: pregunta.date_created,
+            question_id: pregunta.id,
+            item_id: pregunta.item_id,
+            item: item,
+            status: pregunta.status,
+            text: pregunta.text,
+            deleted_from_listing: pregunta.deleted_from_listing,
+            hold: pregunta.hold,
+            answer: pregunta.answer,
+            seller_id: pregunta.seller_id,
+            from: {...pregunta.from, ...from},
+            username: username
+          })
 
-      cargarPreguntasPrevias(req, respuesta, preg, username, token)
-    }
-    else {
-      console.log("ERROR: Falló en la solicitud de item de la pregunta.")
-      guardarPreguntaEnLaBase(req, respuesta, preg, username, token)
-    }
+          cargarPreguntasPrevias(req, respuesta, preg, username, token)
+        }
+        else {
+          console.log("ERROR: Falló en la solicitud de item de la pregunta.")
+          guardarPreguntaEnLaBase(req, respuesta, preg, username, token)
+        }
+      })
   })
 }
+
 
 function cargarPreguntasPrevias(req, respuesta, pregunta, username, token) {
 
@@ -581,10 +593,10 @@ function cargarNuevaPregunta(req) {
 function refrescarToken() {
   var date = new Date(Date.now());
   date = date.getTime();
-
+  console.log(date)
   UserML.find( { expiration_date: { $lt: date }}, (err, users) => {
     users.forEach( (user) => {
-      
+        console.log(user)
         var url = 'https://api.mercadolibre.com/oauth/token?grant_type=refresh_token&client_id='+client_id+'&client_secret='+client_secret+'&refresh_token='+user.refresh_token
         needle.post(url, {}, {}, (req, res) => {
             
