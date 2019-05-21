@@ -7,6 +7,7 @@ services:
     links:
       - mongo
     env_file: dev.env
+    restart: always
   mongo:
     container_name: mongo
     image: mongo
